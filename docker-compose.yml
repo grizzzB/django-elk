@@ -13,7 +13,7 @@ services:
       - app
     ports:
       #Port mapping:"Host OS port:container(Nginx)Port"
-      - "80:80"
+      - "8080:80"
     #user: "${USER_ID}:${GROUP_ID}"
     volumes:
       #volume mount:"Host OS path:Path in the container"
