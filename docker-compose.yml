@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  web:
+    container_name: web
+    image: nginx
+    #build:
+    #  context: ./
+    #  dockerfile: Dockerfile
+    depends_on:
+      # `app`Because the service (container) needs to be started first`depends_on`Is specified
+      - app
+    ports:
+      #Port mapping:"Host OS port:container(Nginx)Port"
+      - "8080:80"
+    volumes:
+      #volume mount:"Host OS path:Path in the container"
+      - ./config/:/etc/nginx/conf.d
+      - ./html/:/usr/share/nginx/html  
+    networks:
+      - nginx_network
+
+  app:
+    container_name: was
+    image: gunicorn-fastapi
+    #build:
+    #  context: ./fastapi
+    #  dockerfile: Dockerfile
+    expose:
+      - 8000
+    networks:
+      - nginx_network
+    #For example, if you want to edit the source code in real time`volumes`Convenient to mount with
+    volumes:
+      - ./fastapi/app:/app
+    #of the app container`CMD`To overwrite`command`use
+    # command: "uvicorn app.main:app --reload --host 0.0.0.0"
+
+networks:
+  nginx_network:
+    driver: bridge
+
