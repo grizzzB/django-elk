@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+
   web:
     container_name: web
     image: nginx
@@ -12,27 +13,32 @@ services:
       - app
     ports:
       #Port mapping:"Host OS port:container(Nginx)Port"
-      - "8080:80"
+      - "80:80"
+    #user: "${USER_ID}:${GROUP_ID}"
     volumes:
       #volume mount:"Host OS path:Path in the container"
-      - ./config/:/etc/nginx/conf.d
-      - ./html/:/usr/share/nginx/html  
+      - ./.bashrc:/root/.bashrc
+      - ./html:/usr/share/nginx/html
+      - ./web/conf.d:/etc/nginx/conf.d
     networks:
       - nginx_network
 
   app:
     container_name: was
     image: gunicorn-fastapi
-    #build:
-    #  context: ./fastapi
-    #  dockerfile: Dockerfile
+    build:
+      context: ./fastapi
+      dockerfile: Dockerfile
     expose:
       - 8000
+    ports:
+      - 8001:8000
     networks:
       - nginx_network
     #For example, if you want to edit the source code in real time`volumes`Convenient to mount with
     volumes:
-      - ./fastapi/app:/app
+      - ./.bashrc:/root/.bashrc
+      - ./fastapi/app:/code/app
     #of the app container`CMD`To overwrite`command`use
     # command: "uvicorn app.main:app --reload --host 0.0.0.0"
 
