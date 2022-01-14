@@ -18,7 +18,7 @@ services:
     volumes:
       #volume mount:"Host OS path:Path in the container"
       - ./.bashrc:/root/.bashrc
-      - ./html:/usr/share/nginx/html
+      - ./web/html:/usr/share/nginx/html
       - ./web/conf.d:/etc/nginx/conf.d
     networks:
       - nginx_network
