@@ -18,7 +18,7 @@ services:
     volumes:
       #volume mount:"Host OS path:Path in the container"
       - ./.bashrc:/root/.bashrc
-      - ./web/html:/usr/share/nginx/html
+      - ./web/html:/etc/nginx/html
       - ./web/conf.d:/etc/nginx/conf.d
     networks:
       - nginx_network
@@ -40,7 +40,7 @@ services:
       - ./.bashrc:/root/.bashrc
       - ./fastapi/app:/code/app
     #of the app container`CMD`To overwrite`command`use
-    # command: "uvicorn app.main:app --reload --host 0.0.0.0"
+    command: "uvicorn app.main:app --reload --proxy-headers --host 0.0.0.0 --port 8000"
 
 networks:
   nginx_network:
