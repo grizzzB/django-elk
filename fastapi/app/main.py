@@ -5,9 +5,11 @@ from fastapi import FastAPI
 app = FastAPI()
 
 
+
+# regex같은 것. 슬래시 뒤 단어에 민감하므로 주의!!
 @app.get("/")
-def read_root():
-    return {"Hello": "World"}
+async def root():
+    return {"message": "Backend"}
 
 @app.get("/api")
 def read_api():

@@ -11,9 +11,11 @@ services:
     depends_on:
       # `app`Because the service (container) needs to be started first`depends_on`Is specified
       - app
+    expose:
+      - 80
     ports:
       #Port mapping:"Host OS port:container(Nginx)Port"
-      - "8080:80"
+      - "80:80"
     #user: "${USER_ID}:${GROUP_ID}"
     volumes:
       #volume mount:"Host OS path:Path in the container"
@@ -29,18 +31,19 @@ services:
     build:
       context: ./fastapi
       dockerfile: Dockerfile
-    expose:
-      - 8000
+
     ports:
-      - 8001:8000
+      - 8001:5000
     networks:
       - nginx_network
+    expose:
+      - 8000
     #For example, if you want to edit the source code in real time`volumes`Convenient to mount with
     volumes:
       - ./.bashrc:/root/.bashrc
       - ./fastapi/app:/code/app
     #of the app container`CMD`To overwrite`command`use
-    command: "uvicorn app.main:app --reload --proxy-headers --host 0.0.0.0 --port 8000"
+    command: "uvicorn app.main:app --reload --proxy-headers --host 0.0.0.0 --port 5000"
 
 networks:
   nginx_network:
