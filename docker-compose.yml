@@ -6,8 +6,8 @@ services:
     container_name: web
     image: nginx:alpine
     #build:
-    #  context: ./
-    #  dockerfile: Dockerfile
+    #  context: ./dockerfile
+    #  dockerfile: web.Dockerfile
     depends_on:
       # `app`Because the service (container) needs to be started first`depends_on`Is specified
       - backend
@@ -30,7 +30,7 @@ services:
         image: vue_frontend
         container_name: front
         build:
-            context: ./
+            context: ./dockerfile
             dockerfile: frontend.Dockerfile
         networks:
             - nginx_network
@@ -48,8 +48,8 @@ services:
     container_name: was
     image: gunicorn-fastapi
     build:
-      context: ./fastapi
-      dockerfile: Dockerfile
+      context: ./dockerfile
+      dockerfile: backend.Dockerfile
 
     ports:
       - 8001:5000
