@@ -1,16 +1,17 @@
-version: '3'
+version: '3.5'
 
 services:
 
   web:
     container_name: web
-    image: nginx
+    image: nginx:alpine
     #build:
     #  context: ./
     #  dockerfile: Dockerfile
     depends_on:
       # `app`Because the service (container) needs to be started first`depends_on`Is specified
-      - app
+      - backend
+      - frontend
     expose:
       - 80
     ports:
@@ -25,7 +26,25 @@ services:
     networks:
       - nginx_network
 
-  app:
+  frontend:
+        image: vue_frontend
+        container_name: front
+        build:
+            context: ./
+            dockerfile: frontend.Dockerfile
+        networks:
+            - nginx_network
+        volumes:
+            - ./frontend:/frontend
+            - /frontend/node_modules
+        expose:
+            - 8080
+        ports:
+            - 8080:8080
+        command: /bin/sh -c "npm run serve"
+        
+
+  backend:
     container_name: was
     image: gunicorn-fastapi
     build:
