@@ -6,7 +6,7 @@ services:
     container_name: web
     image: nginx:alpine
     #build:
-    #  context: ./dockerfile
+    #  context: $PWD/dockerfile
     #  dockerfile: web.Dockerfile
     depends_on:
       # `app`Because the service (container) needs to be started first`depends_on`Is specified
@@ -21,7 +21,7 @@ services:
     volumes:
       #volume mount:"Host OS path:Path in the container"
       - ./.bashrc:/root/.bashrc
-      - ./web/html:/etc/nginx/html
+      #- ./web/html:/etc/nginx/html
       - ./web/conf.d:/etc/nginx/conf.d
     networks:
       - nginx_network
@@ -30,13 +30,13 @@ services:
         image: vue_frontend
         container_name: front
         build:
-            context: ./dockerfile
-            dockerfile: frontend.Dockerfile
+            context: .
+            dockerfile: ./dockerfile/frontend.Dockerfile
         networks:
             - nginx_network
         volumes:
             - ./frontend:/frontend
-            - /frontend/node_modules
+            - ./frontend/node_modules
         expose:
             - 8080
         ports:
@@ -48,15 +48,14 @@ services:
     container_name: was
     image: gunicorn-fastapi
     build:
-      context: ./dockerfile
-      dockerfile: backend.Dockerfile
-
+      context: .
+      dockerfile: ./dockerfile/backend.Dockerfile
     ports:
       - 8001:5000
     networks:
       - nginx_network
     expose:
-      - 8000
+      - 5000
     #For example, if you want to edit the source code in real time`volumes`Convenient to mount with
     volumes:
       - ./.bashrc:/root/.bashrc

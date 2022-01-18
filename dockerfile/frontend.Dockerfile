@@ -1,7 +1,7 @@
 FROM node:lts-alpine as develop-stage
 WORKDIR /frontend
-COPY ./frontend/package*.json ./
+COPY $PWD/frontend/package*.json ./
 RUN npm install
 RUN npm install -g @vue/cli
-COPY ./frontend/ .
+COPY $PWD/frontend/ .
 RUN npm run build
