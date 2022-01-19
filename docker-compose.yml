@@ -10,10 +10,8 @@ services:
     #  dockerfile: web.Dockerfile
     depends_on:
       # `app`Because the service (container) needs to be started first`depends_on`Is specified
-      - backend
       - frontend
-    expose:
-      - 80
+      - backend
     ports:
       #Port mapping:"Host OS port:container(Nginx)Port"
       - "80:80"
@@ -37,14 +35,13 @@ services:
         volumes:
             - ./frontend:/frontend
             - ./frontend/node_modules
-        expose:
-            - 8080
         ports:
             - 8080:8080
         command: /bin/sh -c "npm run serve"
         
 
   backend:
+    restart: always
     container_name: was
     image: gunicorn-fastapi
     build:
@@ -54,14 +51,14 @@ services:
       - 8001:5000
     networks:
       - nginx_network
-    expose:
-      - 5000
+
     #For example, if you want to edit the source code in real time`volumes`Convenient to mount with
     volumes:
       - ./.bashrc:/root/.bashrc
       - ./fastapi/app:/code/app
     #of the app container`CMD`To overwrite`command`use
-    command: "uvicorn app.main:app --reload --proxy-headers --host 0.0.0.0 --port 5000"
+    command:
+      - uvicorn app.main:app --reload --host 0.0.0.0 --port 5000
 
 networks:
   nginx_network:
