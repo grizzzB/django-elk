@@ -34,7 +34,7 @@ services:
             - nginx_network
         volumes:
             - ./frontend:/frontend
-            - ./frontend/node_modules
+            - /frontend/node_modules
         ports:
             - 8080:8080
         command: /bin/sh -c "npm run serve"
@@ -44,6 +44,7 @@ services:
     restart: always
     container_name: was
     image: gunicorn-fastapi
+    env_file: .env # 없어도 됨.
     build:
       context: .
       dockerfile: ./dockerfile/backend.Dockerfile
