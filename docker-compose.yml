@@ -44,7 +44,8 @@ services:
     restart: always
     container_name: was
     image: gunicorn-fastapi
-    env_file: .env # 없어도 됨.
+    # env_file:
+    #   - .env
     build:
       context: .
       dockerfile: ./dockerfile/backend.Dockerfile
@@ -57,9 +58,9 @@ services:
     volumes:
       - ./.bashrc:/root/.bashrc
       - ./fastapi/app:/code/app
-    #of the app container`CMD`To overwrite`command`use
-    command:
-      - uvicorn app.main:app --reload --host 0.0.0.0 --port 5000
+    
+    # command:
+    #   - "uvicorn app.main:app --reload --host 0.0.0.0 --port 5000"
 
 networks:
   nginx_network:
